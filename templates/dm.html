@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}DM with {{ other_name or user_id }} · GroupMe GUI{% endblock %}
+{% block content %}
+  <p><a href="/dms">← Back to DMs</a></p>
+  <h1>DM with {{ other_name or user_id }}</h1>
+
+  <div class="card">
+    <h3>Send DM</h3>
+    <form method="post" action="/dm/{{ user_id }}/send" style="display:flex;gap:.5rem;">
+      <input type="text" name="text" placeholder="Type a message..." />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <section>
+    <h2>Messages</h2>
+    {% for m in messages %}
+      <div class="card">
+        <div class="muted mono">{{ m.created_at }} • {{ m.name }}</div>
+        {% if m.text %}<div>{{ m.text }}</div>{% endif %}
+        {% if m.picture_url %}
+          <div><img src="{{ m.picture_url }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+        {% endif %}
+        {% if m.attachments %}
+          {% for a in m.attachments %}
+            {% if a.type == 'image' or a.type == 'image_url' %}
+              <div><img src="{{ a.url or a.picture_url or a.src }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="muted">No messages.</p>
+    {% endfor %}
+  </section>
+{% endblock %}

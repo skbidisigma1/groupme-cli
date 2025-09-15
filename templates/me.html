@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Me · GroupMe GUI{% endblock %}
+{% block content %}
+  <h1>Me</h1>
+  <div class="card">
+    <div>ID: {{ me.id }}</div>
+    <div>Name: {{ me.name }}</div>
+    <div>Phone: {{ me.phone_number }}</div>
+    <div>Email: {{ me.email }}</div>
+    {% if me.image_url %}
+    <div><img src="{{ me.image_url }}" alt="avatar" style="max-width:120px;border-radius:8px;" /></div>
+    {% endif %}
+  </div>
+{% endblock %}

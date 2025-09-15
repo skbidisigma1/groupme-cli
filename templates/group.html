@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}{{ group.name }} · GroupMe GUI{% endblock %}
+{% block content %}
+  <p><a href="/">← Back</a></p>
+  <h1>{{ group.name }}</h1>
+  <div class="muted">{{ group.id }} • {{ group.members | length }} members</div>
+
+  <div class="card">
+    <form method="get" action="/group/{{ group.id }}" style="display:flex;gap:.5rem;">
+      <input type="text" name="q" placeholder="Search in group" value="{{ q or '' }}" />
+      <button type="submit" class="btn">Search</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Send message</h3>
+    <form method="post" action="/group/{{ group.id }}/send" style="display:flex;gap:.5rem;">
+      <input type="text" name="text" placeholder="Type a message..." />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Actions</h3>
+    <form method="post" action="/group/{{ group.id }}/pin" style="display:flex;gap:.5rem;">
+      <input type="text" name="message_id" placeholder="Message ID to pin" />
+      <button type="submit" class="btn secondary">Pin</button>
+    </form>
+    <form method="post" action="/group/{{ group.id }}/unpin" style="display:flex;gap:.5rem;margin-top:.5rem;">
+      <input type="text" name="message_id" placeholder="Message ID to unpin" />
+      <button type="submit" class="btn secondary">Unpin</button>
+    </form>
+    <form method="post" action="/group/{{ group.id }}/like" style="display:flex;gap:.5rem;margin-top:.5rem;">
+      <input type="text" name="message_id" placeholder="Message ID to like" />
+      <button type="submit" class="btn secondary">Like</button>
+    </form>
+    <form method="post" action="/group/{{ group.id }}/unlike" style="display:flex;gap:.5rem;margin-top:.5rem;">
+      <input type="text" name="message_id" placeholder="Message ID to unlike" />
+      <button type="submit" class="btn secondary">Unlike</button>
+    </form>
+    <form method="post" action="/group/{{ group.id }}/announce" style="display:flex;gap:.5rem;margin-top:.5rem;">
+      <input type="text" name="text" placeholder="Announcement text" />
+      <button type="submit" class="btn secondary">Announce</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Add members</h3>
+    <form method="post" action="/group/{{ group.id }}/add-member" style="display:grid;gap:.5rem;grid-template-columns:1fr 1fr 1fr;">
+      <input type="text" name="nickname" placeholder="nickname">
+      <input type="text" name="user_id" placeholder="user_id">
+      <input type="text" name="phone_number" placeholder="phone_number">
+      <input type="text" name="email" placeholder="email">
+      <button type="submit" class="btn">Add</button>
+    </form>
+    <form method="get" action="/group/{{ group.id }}/members-results" style="display:flex;gap:.5rem;margin-top:.5rem;">
+      <input type="text" name="results_id" placeholder="results_id">
+      <button type="submit" class="btn secondary">Check Add Results</button>
+    </form>
+    <form method="post" action="/group/{{ group.id }}/remove-member" style="display:flex;gap:.5rem;margin-top:.5rem;">
+      <input type="text" name="membership_id" placeholder="membership_id">
+      <button type="submit" class="btn secondary">Remove Member</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Image</h3>
+    <form method="post" action="/group/{{ group.id }}/send-image" enctype="multipart/form-data" style="display:flex;gap:.5rem;">
+      <input type="file" name="file" />
+      <input type="text" name="message" placeholder="Caption (optional)" />
+      <button type="submit" class="btn">Send Image</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Admin</h3>
+    <form method="post" action="/group/{{ group.id }}/update" style="display:grid;gap:.5rem;grid-template-columns:1fr 1fr;">
+      <input type="text" name="name" placeholder="New name" />
+      <input type="text" name="description" placeholder="New description" />
+      <input type="text" name="image_url" placeholder="Image URL" />
+      <input type="text" name="share" placeholder="share=true/false" />
+      <input type="text" name="office_mode" placeholder="office_mode=true/false" />
+      <button type="submit" class="btn">Update</button>
+    </form>
+    <div style="margin-top:.5rem; display:flex; gap:.5rem;">
+      <form method="post" action="/group/{{ group.id }}/leave"><button class="btn secondary" type="submit">Leave</button></form>
+      <form method="post" action="/group/{{ group.id }}/destroy"><button class="btn secondary" type="submit">Destroy</button></form>
+      <form method="post" action="/group/{{ group.id }}/join"><button class="btn secondary" type="submit">Join</button></form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Export</h3>
+    <form method="post" action="/group/{{ group.id }}/export" style="display:flex;gap:.5rem;">
+      <input type="text" name="filename" placeholder="group_export.json" />
+      <button type="submit" class="btn">Export</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <a class="btn" href="/group/{{ group.id }}/stats">View Stats</a>
+  </div>
+
+  <section>
+    <h2>Recent messages</h2>
+    {% for m in messages %}
+      <div class="card">
+        <div class="muted mono">{{ m.created_at }} • {{ m.name }}</div>
+        {% if m.text %}<div>{{ m.text }}</div>{% endif %}
+        {% if m.picture_url %}
+          <div><img src="{{ m.picture_url }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+        {% endif %}
+        {% if m.attachments %}
+          {% for a in m.attachments %}
+            {% if a.type == 'image' or a.type == 'image_url' %}
+              <div><img src="{{ a.url or a.picture_url or a.src }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="muted">No messages.</p>
+    {% endfor %}
+  </section>
+{% endblock %}

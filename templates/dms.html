@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}DMs · GroupMe GUI{% endblock %}
+{% block content %}
+  <h1>Direct Messages</h1>
+  <div class="card">
+    <form method="get" action="/dms/search" style="display:flex;gap:.5rem;">
+      <input type="text" name="q" placeholder="Search DMs" value="{{ q or '' }}" />
+      <input type="text" name="user_id" placeholder="Optional user_id filter" value="{{ user_id or '' }}" />
+      <button type="submit" class="btn">Search</button>
+    </form>
+  </div>
+
+  <h2>Chats</h2>
+  <div class="row">
+    {% for c in chats %}
+      {% set u = c.other_user or {} %}
+      <div class="card">
+        <div><a href="/dm/{{ u.id }}">{{ u.name or 'DM' }}</a></div>
+        <div class="muted mono">{{ u.id }}</div>
+        {% if c.last_message %}
+          {% if c.last_message.text %}
+            <div class="muted">{{ c.last_message.text }}</div>
+          {% endif %}
+          {% if c.last_message.picture_url %}
+            <div><img src="{{ c.last_message.picture_url }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+          {% endif %}
+          {% if c.last_message.attachments %}
+            {% for a in c.last_message.attachments %}
+              {% if a.type == 'image' or a.type == 'image_url' %}
+                <div><img src="{{ a.url or a.picture_url or a.src }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="muted">No chats.</div>
+    {% endfor %}
+  </div>
+
+  {% if results %}
+  <h2>Search results</h2>
+  {% for m in results %}
+    <div class="card">
+      <div class="muted mono">{{ m.created_at }} • {{ m.name }}</div>
+      {% if m.text %}<div>{{ m.text }}</div>{% endif %}
+      {% if m.picture_url %}
+        <div><img src="{{ m.picture_url }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+      {% endif %}
+      {% if m.attachments %}
+        {% for a in m.attachments %}
+          {% if a.type == 'image' or a.type == 'image_url' %}
+            <div><img src="{{ a.url or a.picture_url or a.src }}" alt="image" style="max-width:100%; border-radius:6px; margin-top:.5rem;"/></div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="muted">No results.</div>
+  {% endfor %}
+  {% endif %}
+{% endblock %}

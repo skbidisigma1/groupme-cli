@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Former Groups · GroupMe GUI{% endblock %}
+{% block content %}
+  <h1>Former Groups</h1>
+  <div class="row">
+    {% for g in groups %}
+      <div class="card">
+        <div>{{ g.name }}</div>
+        <div class="muted mono">{{ g.id }}</div>
+      </div>
+    {% else %}
+      <div class="muted">None</div>
+    {% endfor %}
+  </div>
+{% endblock %}

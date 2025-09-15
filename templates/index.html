@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Groups · GroupMe GUI{% endblock %}
+{% block content %}
+  <h1>Groups</h1>
+  <p class="muted">Select a group to view messages and send. Create new groups below.</p>
+
+  <div class="row">
+    {% for g in groups %}
+      <div class="card">
+        <div><a href="/group/{{ g.id }}">{{ g.name }}</a></div>
+        <div class="muted mono">{{ g.id }} • {{ g.members | length }} members</div>
+      </div>
+    {% else %}
+      <div class="muted">No groups found.</div>
+    {% endfor %}
+  </div>
+
+  <div class="card">
+    <h3>Create Group</h3>
+    <form method="post" action="/groups/create">
+      <label>Name</label>
+      <input type="text" name="name" required>
+      <label>Description</label>
+      <input type="text" name="description">
+      <div style="margin-top:.75rem">
+        <button type="submit">Create</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

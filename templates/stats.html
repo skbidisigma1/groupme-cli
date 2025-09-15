@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Stats · GroupMe GUI{% endblock %}
+{% block content %}
+  <p><a href="/group/{{ group_id }}">← Back to group</a></p>
+  <h1>Stats for {{ group_id }}</h1>
+
+  <div class="card">
+    <h3>Top posters</h3>
+    <ul>
+      {% for name, cnt in stats.top_posters %}
+        <li>{{ name }} — {{ cnt }}</li>
+      {% else %}
+        <li class="muted">No data</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Most liked messages</h3>
+    <ul>
+      {% for likes, m in stats.most_liked %}
+        <li>{{ likes }}❤ — {{ m.name }}: {{ (m.text or '')[:80] }}</li>
+      {% else %}
+        <li class="muted">No data</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Hourly activity (UTC)</h3>
+    <div class="mono">
+      {% for h, c in stats.hour_hist %}
+        {{ '%02d' % h }}: {{ c }}<br/>
+      {% else %}
+        <span class="muted">No data</span>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

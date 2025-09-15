@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Bulk · GroupMe GUI{% endblock %}
+{% block content %}
+  <h1>Bulk like / unlike</h1>
+
+  <div class="card">
+    <form method="post" action="/bulk/like">
+      <label>Conversation ID (group_id)</label>
+      <input type="text" name="conversation_id" placeholder="group_id" required />
+      <label>Message IDs (comma or newline separated)</label>
+      <textarea name="message_ids" placeholder="123, 456, 789"></textarea>
+      <button type="submit" class="btn">Bulk Like</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <form method="post" action="/bulk/unlike">
+      <label>Conversation ID (group_id)</label>
+      <input type="text" name="conversation_id" placeholder="group_id" required />
+      <label>Message IDs (comma or newline separated)</label>
+      <textarea name="message_ids" placeholder="123, 456, 789"></textarea>
+      <button type="submit" class="btn secondary">Bulk Unlike</button>
+    </form>
+  </div>
+
+  {% if result %}
+  <div class="card">
+    <h3>Result</h3>
+    <div class="mono">ok: {{ result.ok }}, failed: {{ result.failed }}</div>
+    {% if result.errors and result.errors|length > 0 %}
+      <details>
+        <summary>Errors</summary>
+        <pre class="mono">{{ result.errors | tojson(indent=2) }}</pre>
+      </details>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endblock %}

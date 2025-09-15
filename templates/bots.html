@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Bots · GroupMe GUI{% endblock %}
+{% block content %}
+  <h1>Bots</h1>
+
+  <div class="card">
+    <h3>Create Bot</h3>
+    <form method="post" action="/bots/create" style="display:grid;gap:.5rem;grid-template-columns:1fr 1fr;">
+      <input type="text" name="name" placeholder="Name" required />
+      <select name="group_id">
+        {% for g in groups %}
+          <option value="{{ g.id }}">{{ g.name }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" name="avatar_url" placeholder="Avatar URL" />
+      <input type="text" name="callback_url" placeholder="Callback URL" />
+      <button type="submit" class="btn">Create</button>
+    </form>
+  </div>
+
+  <h2>Existing Bots</h2>
+  <div class="row">
+    {% for b in bots %}
+      <div class="card">
+        <div class="mono">ID: {{ b.bot_id or b.id }}</div>
+        <div>Name: {{ b.name }}</div>
+        <div>Group: {{ b.group_id }}</div>
+        <form method="post" action="/bots/{{ b.bot_id or b.id }}/post" style="display:flex;gap:.5rem;margin-top:.5rem;">
+          <input type="text" name="text" placeholder="Text" />
+          <input type="text" name="picture_url" placeholder="Picture URL (optional)" />
+          <button type="submit" class="btn">Post</button>
+        </form>
+        <form method="post" action="/bots/{{ b.bot_id or b.id }}/destroy" style="margin-top:.5rem;">
+          <button type="submit" class="btn secondary">Destroy</button>
+        </form>
+      </div>
+    {% else %}
+      <div class="muted">No bots.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}GroupMe GUI{% endblock %}</title>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { background: #0b0e11; color: #e5e7eb; }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; }
+    a { color: #60a5fa; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .muted { color: #9ca3af; }
+    .card { border: 1px solid #1f2937; background: #111827; border-radius: 10px; padding: 1rem; margin-bottom: .75rem; }
+    header { margin-bottom: 1.5rem; }
+    nav a { margin-right: 1rem; }
+    input[type=text], input[type=number], textarea, select { width: 100%; max-width: 100%; box-sizing: border-box; color: #e5e7eb; background: #0f1620; border: 1px solid #1f2937; border-radius: 8px; padding: .55rem .7rem; }
+    textarea { min-height: 100px; }
+    button, .btn { display: inline-block; padding: .5rem .8rem; background: #2563eb; color: #fff; border: none; border-radius: 8px; }
+    button:hover, .btn:hover { background: #1d4ed8; cursor: pointer; text-decoration: none; }
+    .btn.secondary { background: #334155; }
+    .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .right { text-align: right; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Groups</a>
+  <a href="/former">Former</a>
+  <a href="/me">Me</a>
+      <a href="/dms">DMs</a>
+      <a href="/bots">Bots</a>
+      <a href="/watch">Watch</a>
+  <a href="/bulk">Bulk</a>
+    </nav>
+  </header>
+  {% block content %}{% endblock %}
+</body>
+</html>
